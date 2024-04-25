@@ -11,7 +11,7 @@ c.JupyterHub.tornado_settings = {
 }
 
 # Authentication
-#c.JupyterHub.authenticator_class = DummyAuthenticator
+c.JupyterHub.authenticator_class = DummyAuthenticator
 
 from oauthenticator.github import LocalGitHubOAuthenticator
 from oauthenticator.oauth2 import OAuthCallbackHandler
@@ -36,20 +36,22 @@ class MyAuthHandler(OAuthCallbackHandler):
 
         return next_url
 
-c.JupyterHub.authenticator_class = LocalGitHubOAuthenticator
-c.GitHubOAuthenticator.oauth_callback_url = os.environ['OAUTH_CALLBACK_URL']
-LocalGitHubOAuthenticator.callback_handler = MyAuthHandler
+#c.JupyterHub.authenticator_class = LocalGitHubOAuthenticator
+#c.GitHubOAuthenticator.oauth_callback_url = os.environ['OAUTH_CALLBACK_URL']
+#LocalGitHubOAuthenticator.callback_handler = MyAuthHandler
 
-c.Authenticator.delete_invalid_users = True
+#c.Authenticator.delete_invalid_users = True
 
 #c.LocalGitHubOAuthenticator.add_user_cmd = ['adduser', '-q', '--gecos', '""', '--home', '/nfs/home/USERNAME', '--disabled-password']
-c.LocalAuthenticator.create_system_users=True
-c.GitHubOAuthenticator.allowed_organizations = { 'dirac-institute', 'astronomy-commons', 'jupyter-elsa-demo' }
-c.GitHubOAuthenticator.scope = [ 'read:user', 'read:org' ]
+#c.LocalAuthenticator.create_system_users=True
+#c.GitHubOAuthenticator.allowed_organizations = { 'dirac-institute', 'astronomy-commons', 'jupyter-elsa-demo' }
+#c.GitHubOAuthenticator.scope = [ 'read:user', 'read:org' ]
 
 #c.Authenticator.allowed_users = { 'mjuric', 'stevenstetzler' }
-c.Authenticator.admin_users = { 'mjuric', 'stevenstetzler' }
+#c.Authenticator.admin_users = { 'mjuric', 'stevenstetzler' }
 
+c.NotebookApp.disable_check_xsrf = True 
+c.ServerApp.disable_check_xsrf = True
 # Spawner
 c.JupyterHub.spawner_class = elsa.spawner.PodmanSpawner
 
