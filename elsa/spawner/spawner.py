@@ -95,13 +95,13 @@ class PodmanSpawner(Spawner):
                 max_workers=1
             )
 
-        self.scheduler = DOScheduler(
-            self.scheduler_image, 
-            self.scheduler_region, 
-            # self.scheduler_vpc,
-            ssh_key=self.scheduler_ssh_key,
-            event_queue=self.events,
-        )
+        # self.scheduler = DOScheduler(
+        #     self.scheduler_image,
+        #     self.scheduler_region,
+        #     # self.scheduler_vpc,
+        #     ssh_key=self.scheduler_ssh_key,
+        #     event_queue=self.events,
+        # )
 
     def get_env(self):
         try:
@@ -285,16 +285,19 @@ class PodmanSpawner(Spawner):
 
         self.log.info("Got user options: %s", self.user_options)
         # request VM
-        vm_id, vm_ip = await self.asynchronize(
-            self.scheduler.get_vm, self.user_options.get("size").get("slug")
-        )
-        self.vm_id = vm_id
+        # vm_id, vm_ip = await self.asynchronize(
+        #     self.scheduler.get_vm, self.user_options.get("size").get("slug")
+        # )
+        # self.vm_id = vm_id
         # connect to VM for executing Podman
-        self.podman = SSHPodmanCli(
-            host=vm_ip, 
+        # self.podman = SSHPodmanCli(
+        #     host=vm_ip,
+        #     loglevel=logging.DEBUG,
+        #     user="root",
+        #     key="/root/.ssh/id_rsa_podman"
+        # )
+        self.podman = PodmanCli(
             loglevel=logging.DEBUG,
-            user="root",
-            key="/root/.ssh/id_rsa_podman"
         )
         
         self.log.info("Ensuring image exists")
@@ -445,9 +448,9 @@ class PodmanSpawner(Spawner):
         await self.asynchronize(
             self.podman.rm_container, self.container_name
         )    
-        await self.asynchronize(
-            self.scheduler.release_vm, self.vm_id
-        )
+        # await self.asynchronize(
+        #     self.scheduler.release_vm, self.vm_id
+        # )
 
     def get_state(self):
         """get the current state"""
